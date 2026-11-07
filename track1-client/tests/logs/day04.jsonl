@@ -1,0 +1,8 @@
+{"request_id": "req-test-001", "chunks": [{"request_id": "req-test-001", "chunk": "Hello"}, {"request_id": "req-test-001", "chunk": " from"}, {"request_id": "req-test-001", "chunk": " the"}, {"request_id": "req-test-001", "chunk": " server"}], "first_chunk_seconds": 0.6105066999998598, "final_seconds": 0.6152109999993627, "error_type": null, "status_code": 200}
+{"request_id": "req-test-002", "chunks": [], "first_chunk_seconds": null, "final_seconds": 0.04823339999984455, "error_type": "HTTPStatusError", "status_code": 500}
+{"request_id": "req-test-003", "chunks": [], "first_chunk_seconds": null, "final_seconds": 0.24861409999994066, "error_type": "TimeoutError", "status_code": 200}
+{"request_id": "req-test-004", "chunks": [], "first_chunk_seconds": null, "final_seconds": 0.10140880000017205, "error_type": "CancelledError", "status_code": 200}
+{"request_id": "req-test-001", "chunks": [{"request_id": "req-test-001", "chunk": "Hello"}, {"request_id": "req-test-001", "chunk": " from"}, {"request_id": "req-test-001", "chunk": " the"}, {"request_id": "req-test-001", "chunk": " server"}], "first_chunk_seconds": 0.5273529999994935, "final_seconds": 0.531710700000076, "error_type": null, "status_code": 200}
+{"request_id": "req-test-002", "chunks": [], "first_chunk_seconds": null, "final_seconds": 0.03934560000016063, "error_type": "HTTPStatusError", "status_code": 500}
+{"request_id": "req-test-003", "chunks": [], "first_chunk_seconds": null, "final_seconds": 0.24836750000031316, "error_type": "TimeoutError", "status_code": 200}
+{"request_id": "req-test-004", "chunks": [], "first_chunk_seconds": null, "final_seconds": 0.10449380000045494, "error_type": "CancelledError", "status_code": 200}

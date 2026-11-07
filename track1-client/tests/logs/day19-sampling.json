@@ -1,0 +1,5 @@
+{
+    "greedy_deterministic": true,
+    "top_k_works": true,
+    "temperature_controls_spread": true
+}

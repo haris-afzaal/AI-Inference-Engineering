@@ -1,8 +1,12 @@
-﻿import pytest
+import pathlib
+import pytest
 import subprocess
 import sys
 import time
 import socket
+
+
+SERVER_SCRIPT = pathlib.Path(__file__).parent / "fake_stream_server.py"
 
 
 def wait_for_port(host: str, port: int, timeout: float = 10.0):
@@ -19,7 +23,7 @@ def wait_for_port(host: str, port: int, timeout: float = 10.0):
 @pytest.fixture(scope="session", autouse=True)
 def start_fake_stream_server():
     process = subprocess.Popen(
-        [sys.executable, "tests/fake_stream_server.py"],
+        [sys.executable, str(SERVER_SCRIPT)],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
     )
