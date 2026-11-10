@@ -1,0 +1,13 @@
+{
+    "prompt_length_tokens": 8,
+    "ttft_ms": 985.3314229999341,
+    "decode_times_ms": [
+        136.51679199983846,
+        108.5227980001946,
+        153.30439899980774,
+        154.29461300004732,
+        170.0738279998859
+    ],
+    "avg_itl_ms": 144.5424859999548,
+    "generated_text": " using AI to make decisions and"
+}

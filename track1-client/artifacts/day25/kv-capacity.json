@@ -1,0 +1,14 @@
+{
+    "SmolLM-135M": {
+        "bytes_per_token": 23040,
+        "mb_per_1k_tokens": 21.97,
+        "max_tokens_in_8gb": 372827,
+        "concurrent_users_at_2048_ctx": 182
+    },
+    "Llama-3-8B": {
+        "bytes_per_token": 131072,
+        "mb_per_1k_tokens": 125.0,
+        "max_tokens_in_8gb": 65536,
+        "concurrent_users_at_2048_ctx": 32
+    }
+}
