@@ -1,0 +1,52 @@
+[
+    {
+        "config": {
+            "name": "Standard Setup",
+            "utilization": 0.9,
+            "max_len": 2048,
+            "dtype": "float16"
+        },
+        "status": "SUCCESS",
+        "max_concurrency": 146
+    },
+    {
+        "config": {
+            "name": "Low Mem Budget",
+            "utilization": 0.4,
+            "max_len": 2048,
+            "dtype": "float16"
+        },
+        "status": "SUCCESS",
+        "max_concurrency": 55
+    },
+    {
+        "config": {
+            "name": "Huge Context",
+            "utilization": 0.9,
+            "max_len": 32000,
+            "dtype": "float16"
+        },
+        "status": "SUCCESS",
+        "max_concurrency": 9
+    },
+    {
+        "config": {
+            "name": "FP32 Datatype",
+            "utilization": 0.9,
+            "max_len": 2048,
+            "dtype": "float32"
+        },
+        "status": "SUCCESS",
+        "max_concurrency": 70
+    },
+    {
+        "config": {
+            "name": "Over Allocating",
+            "utilization": 1.1,
+            "max_len": 2048,
+            "dtype": "float16"
+        },
+        "status": "FAILED",
+        "reason": "Utilization > 1.0"
+    }
+]

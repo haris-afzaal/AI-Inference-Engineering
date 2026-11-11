@@ -1,0 +1,8 @@
+{
+    "uncached_ttft_ms": 901.2590520005688,
+    "uncached_avg_itl_ms": 253.7085817893967,
+    "cached_ttft_ms": 123.22062300063408,
+    "cached_avg_itl_ms": 48.55754947364307,
+    "itl_speedup_percent": 80.86089594164747,
+    "output_match": true
+}
