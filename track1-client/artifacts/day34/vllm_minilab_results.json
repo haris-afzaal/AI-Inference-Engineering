@@ -1,0 +1,26 @@
+[
+    {
+        "name": "Baseline (Safe)",
+        "gpu_mem": 0.8,
+        "max_len": 2048,
+        "ttft_ms": 45,
+        "throughput": 1500,
+        "gpu_blocks": 3500
+    },
+    {
+        "name": "High Concurrency",
+        "gpu_mem": 0.95,
+        "max_len": 2048,
+        "ttft_ms": 52,
+        "throughput": 2800,
+        "gpu_blocks": 8500
+    },
+    {
+        "name": "Long Context (16k)",
+        "gpu_mem": 0.9,
+        "max_len": 16384,
+        "ttft_ms": 120,
+        "throughput": 800,
+        "gpu_blocks": 1500
+    }
+]
