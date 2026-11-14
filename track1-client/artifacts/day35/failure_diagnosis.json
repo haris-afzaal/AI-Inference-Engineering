@@ -1,0 +1,32 @@
+{
+  "clean_stream": {
+    "status": 200,
+    "ttft_ms": 132.57,
+    "total_ms": 337.09,
+    "text": "PagedAttention eliminates KV cache fragmentation.",
+    "usage": {
+      "prompt_tokens": 24,
+      "completion_tokens": 5,
+      "total_tokens": 29
+    }
+  },
+  "failure_diagnosis": {
+    "injected_fault": "Requested max_tokens=4096 on engine configured with max_model_len=2048",
+    "http_status": 400,
+    "error_code": "context_length_exceeded",
+    "symptom": "HTTP 400 Bad Request returned immediately before prefill execution",
+    "system_layer": "API Input Validation / Scheduler Admission Layer (Front-end Engine Guard)",
+    "remediation": "Clamp client max_tokens <= (max_model_len - prompt_tokens) -> retried with max_tokens=128"
+  },
+  "corrected_retry": {
+    "status": 200,
+    "ttft_ms": 52.65,
+    "total_ms": 256.18,
+    "text": "PagedAttention eliminates KV cache fragmentation.",
+    "usage": {
+      "prompt_tokens": 24,
+      "completion_tokens": 5,
+      "total_tokens": 29
+    }
+  }
+}
