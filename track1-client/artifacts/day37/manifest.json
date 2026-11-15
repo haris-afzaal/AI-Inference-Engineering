@@ -1,0 +1,25 @@
+{
+  "day": 37,
+  "timestamp_utc": "2026-11-15T03:50:01.636665+00:00",
+  "environment": {
+    "os": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+    "python_version": "3.12.3",
+    "cpu_cores": 8
+  },
+  "workload": {
+    "model": "HuggingFaceTB/SmolLM-135M-Instruct",
+    "warmup_count": 2,
+    "repetitions": 5,
+    "concurrency": 1
+  },
+  "summary": {
+    "measured_total": 5,
+    "measured_ok": 5,
+    "measured_errors": 0,
+    "failure_rate": 0.0,
+    "mean_ttft_ms": 38.459,
+    "mean_itl_ms": 15.273,
+    "mean_total_latency_ms": 115.302,
+    "mean_output_tokens_per_sec": 52.042
+  }
+}
