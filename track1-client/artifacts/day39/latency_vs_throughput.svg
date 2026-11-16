@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="420" style="background:#ffffff;font-family:sans-serif">
+  <text x="380.0" y="26" text-anchor="middle" font-size="15" font-weight="bold" fill="#111827">Day 39 Concurrency Sweep: Latency vs. System Throughput</text>
+  <line x1="75" y1="45" x2="75" y2="355" stroke="#374151" stroke-width="1.5"/>
+  <line x1="75" y1="355" x2="720" y2="355" stroke="#374151" stroke-width="1.5"/>
+  <polyline fill="none" stroke="#2563eb" stroke-width="2.5" points="371.4,253.1 495.1,226.0 595.3,174.6 635.9,177.8 619.1,173.3"/>
+  <polyline fill="none" stroke="#dc2626" stroke-width="2.5" stroke-dasharray="5,4" points="371.4,253.0 495.1,223.1 595.3,169.8 635.9,96.7 619.1,85.4"/>
+  <circle cx="371.4" cy="253.1" r="5" fill="#2563eb"/><circle cx="371.4" cy="253.0" r="5" fill="#dc2626"/><text x="378.4" y="247.0" font-size="11" fill="#1f2937">c=1 (93.21 tok/s, fail=0%)</text><circle cx="495.1" cy="226.0" r="5" fill="#2563eb"/><circle cx="495.1" cy="223.1" r="5" fill="#dc2626"/><text x="502.1" y="217.1" font-size="11" fill="#1f2937">c=2 (132.13 tok/s, fail=0%)</text><circle cx="595.3" cy="174.6" r="5" fill="#2563eb"/><circle cx="595.3" cy="169.8" r="5" fill="#dc2626"/><text x="602.3" y="163.8" font-size="11" fill="#1f2937">c=4 (163.63 tok/s, fail=0%)</text><circle cx="635.9" cy="177.8" r="5" fill="#2563eb"/><circle cx="635.9" cy="96.7" r="5" fill="#dc2626"/><text x="642.9" y="90.7" font-size="11" fill="#1f2937">c=8 (176.4 tok/s, fail=0%)</text><circle cx="619.1" cy="173.3" r="5" fill="#2563eb"/><circle cx="619.1" cy="85.4" r="5" fill="#dc2626"/><text x="626.1" y="79.4" font-size="11" fill="#1f2937">c=12 (171.14 tok/s, fail=0%)</text>
+  <text x="397.5" y="402" text-anchor="middle" font-size="13" fill="#111827">Aggregate System Throughput (output tokens/sec)</text>
+  <text x="20" y="200.0" text-anchor="middle" font-size="13" fill="#111827" transform="rotate(-90 20,200.0)">End-to-End Latency (ms)</text>
+  <rect x="540" y="53" width="185" height="48" fill="#f9fafb" stroke="#d1d5db"/>
+  <line x1="550" y1="69" x2="575" y2="69" stroke="#2563eb" stroke-width="2.5"/>
+  <text x="582" y="73" font-size="11" fill="#111827">p50 E2E Latency (ms)</text>
+  <line x1="550" y1="87" x2="575" y2="87" stroke="#dc2626" stroke-width="2.5" stroke-dasharray="5,4"/>
+  <text x="582" y="91" font-size="11" fill="#111827">p95 E2E Latency (ms)</text>
+</svg>
