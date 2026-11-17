@@ -1,0 +1,157 @@
+{
+  "gate": "Week 6 Benchmark Gate (Day 41)",
+  "timestamp_utc": "2026-11-17T13:27:42.548726+00:00",
+  "git_commit": "f980582",
+  "environment": {
+    "os": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+    "python": "3.12.3",
+    "cpu_cores": 8
+  },
+  "reproduce_command": "./.venv-linux/bin/python scripts/run_week06_gate.py",
+  "sweep_results": [
+    {
+      "concurrency": 1,
+      "measured_n": 6,
+      "ok_n": 6,
+      "failure_rate": 0.0,
+      "system_tps": 89.35,
+      "ttft_p50_ms": 31.796,
+      "ttft_p95_ms": 32.395,
+      "itl_p50_ms": 7.996,
+      "e2e_p50_ms": 87.637,
+      "e2e_p95_ms": 90.188
+    },
+    {
+      "concurrency": 2,
+      "measured_n": 6,
+      "ok_n": 6,
+      "failure_rate": 0.0,
+      "system_tps": 113.61,
+      "ttft_p50_ms": 33.946,
+      "ttft_p95_ms": 171.549,
+      "itl_p50_ms": 9.918,
+      "e2e_p50_ms": 103.996,
+      "e2e_p95_ms": 227.381
+    },
+    {
+      "concurrency": 4,
+      "measured_n": 6,
+      "ok_n": 6,
+      "failure_rate": 0.0,
+      "system_tps": 159.74,
+      "ttft_p50_ms": 38.99,
+      "ttft_p95_ms": 183.347,
+      "itl_p50_ms": 11.614,
+      "e2e_p50_ms": 123.975,
+      "e2e_p95_ms": 285.853
+    },
+    {
+      "concurrency": 8,
+      "measured_n": 6,
+      "ok_n": 6,
+      "failure_rate": 0.0,
+      "system_tps": 197.73,
+      "ttft_p50_ms": 50.43,
+      "ttft_p95_ms": 125.655,
+      "itl_p50_ms": 11.703,
+      "e2e_p50_ms": 132.989,
+      "e2e_p95_ms": 225.143
+    }
+  ],
+  "overall_summary": {
+    "generated_at_utc": "2026-11-17T13:27:42.538279+00:00",
+    "source_file": "week06-gate-in-memory",
+    "environment": {
+      "os": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+      "python_version": "3.12.3",
+      "cpu_cores": 8
+    },
+    "percentile_convention": {
+      "method": "nearest-rank",
+      "formula": "sorted_values[min(n - 1, max(0, ceil((q / 100.0) * n) - 1))]",
+      "outlier_policy": "strict_preservation_no_trimming_or_winsorization",
+      "failure_handling": "excluded_from_latency_percentiles_reported_in_failure_rate"
+    },
+    "sample_counts": {
+      "total_jsonl_rows": 32,
+      "warmup_excluded": 8,
+      "measured_total": 24,
+      "measured_ok": 24,
+      "measured_error": 0
+    },
+    "reliability": {
+      "failure_rate": 0.0,
+      "success_rate": 1.0,
+      "error_breakdown": {}
+    },
+    "throughput": {
+      "total_output_tokens": 192,
+      "aggregate_output_tokens_per_sec": 62.285,
+      "per_request_tps_distribution": {
+        "count": 24,
+        "min": 27.986,
+        "p50": 75.105,
+        "p95": 91.379,
+        "p99": 91.513,
+        "max": 91.513,
+        "mean": 69.581
+      }
+    },
+    "latency_ms": {
+      "ttft_ms": {
+        "count": 24,
+        "min": 30.447,
+        "p50": 34.606,
+        "p95": 171.549,
+        "p99": 183.347,
+        "max": 183.347,
+        "mean": 54.931
+      },
+      "itl_ms": {
+        "count": 24,
+        "min": 7.83,
+        "p50": 9.918,
+        "p95": 14.29,
+        "p99": 14.534,
+        "max": 14.534,
+        "mean": 10.414
+      },
+      "total_latency_ms": {
+        "count": 24,
+        "min": 87.419,
+        "p50": 105.929,
+        "p95": 227.381,
+        "p99": 285.853,
+        "max": 285.853,
+        "mean": 128.441
+      }
+    }
+  },
+  "independent_sample_verification": {
+    "request_id": "c1-m0",
+    "harness_ttft_ms": 30.447,
+    "independent_ttft_ms": 30.447,
+    "harness_mean_itl_ms": 7.996,
+    "independent_mean_itl_ms": 7.996,
+    "harness_e2e_ms": 87.419,
+    "independent_e2e_ms": 87.419,
+    "harness_tps": 91.513,
+    "independent_tps": 91.513,
+    "verified_match": true
+  },
+  "identified_outlier": {
+    "request_id": "c4-m3",
+    "concurrency": 4,
+    "total_latency_ms": 285.853,
+    "ttft_ms": 183.347,
+    "global_e2e_p50_ms": 105.929,
+    "slowdown_vs_p50_ratio": 2.7
+  },
+  "bounded_assumption_break_test": {
+    "broken_assumption": "Set admission limit max_inflight=1 under concurrency=4 burst",
+    "broken_failure_rate": 0.8333,
+    "observed_symptom": "HTTPError_503",
+    "restored_assumption": "Restored max_inflight=12",
+    "restored_failure_rate": 0.0
+  }
+}
