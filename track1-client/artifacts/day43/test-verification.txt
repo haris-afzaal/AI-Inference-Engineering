@@ -1,0 +1,9 @@
+test_invalid_dtype_raises_value_error (tests.test_memory_budget.TestMemoryBudget.test_invalid_dtype_raises_value_error) ... ok
+test_llama3_8b_fp16_oom_at_4k_context_c4 (tests.test_memory_budget.TestMemoryBudget.test_llama3_8b_fp16_oom_at_4k_context_c4) ... ok
+test_llama3_8b_fp16_vs_int8_on_t4_15gib_budget (tests.test_memory_budget.TestMemoryBudget.test_llama3_8b_fp16_vs_int8_on_t4_15gib_budget) ... ok
+test_zero_head_dim_raises_value_error (tests.test_memory_budget.TestMemoryBudget.test_zero_head_dim_raises_value_error) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.012s
+
+OK

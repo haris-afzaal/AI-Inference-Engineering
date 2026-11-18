@@ -1,0 +1,7 @@
+model_name,weight_dtype,kv_dtype,seq_len,concurrency,weight_gib,kv_bytes_per_token,kv_cache_gib,runtime_overhead_gib,total_estimated_gib,device_budget_gib,safety_margin_gib,utilization_pct,fits_in_budget,bytes_moved_per_step_gib,bw_floor_ms_per_token
+SmolLM-135M,fp16,fp16,1024,1,0.2515,23040,0.022,0.4,0.6734,15.0,14.3266,4.49,True,0.2734,0.979
+SmolLM-135M,fp16,fp16,2048,8,0.2515,23040,0.3516,0.4,1.003,15.0,13.997,6.69,True,0.603,2.158
+Llama-3-8B,fp16,fp16,1024,1,14.9012,131072,0.125,0.6,15.6262,15.0,-0.6262,104.17,False,15.0262,53.781
+Llama-3-8B,fp16,fp16,2048,4,14.9012,131072,1.0,0.6,16.5012,15.0,-1.5012,110.01,False,15.9012,56.912
+Llama-3-8B,fp16,fp16,4096,4,14.9012,131072,2.0,0.6,17.5012,15.0,-2.5012,116.67,False,16.9012,60.492
+Llama-3-8B,int8,fp16,4096,8,7.4506,131072,4.0,0.6,12.0506,15.0,2.9494,80.34,True,11.4506,40.983
