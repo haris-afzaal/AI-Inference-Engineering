@@ -1,0 +1,1392 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-9.1.1, pluggy-1.7.0 -- /mnt/b/AI Inference Engineering/track1-client/.venv-linux/bin/python
+cachedir: .pytest_cache
+rootdir: /mnt/b/AI Inference Engineering/track1-client
+configfile: pyproject.toml
+testpaths: tests
+plugins: anyio-4.15.1, platformdirs-4.13.6, asyncio-1.4.0
+asyncio: mode=Mode.AUTO, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collecting ... collected 21 items
+
+tests/test_async_demo.py::test_requests_run_concurrently ERROR           [  4%]
+tests/test_async_demo.py::test_timeout_raises_timeout_error ERROR        [  9%]
+tests/test_async_demo.py::test_cancellation_runs_cleanup ERROR           [ 14%]
+tests/test_async_demo.py::test_negative_duration_is_rejected ERROR       [ 19%]
+tests/test_causal_attention.py::test_causal_mask ERROR                   [ 23%]
+tests/test_client.py::test_stream_request_returns_chunks ERROR           [ 28%]
+tests/test_client.py::test_stream_request_handles_http_error ERROR       [ 33%]
+tests/test_client.py::test_stream_request_handles_timeout ERROR          [ 38%]
+tests/test_client.py::test_stream_request_propagates_cancellation ERROR  [ 42%]
+tests/test_config.py::test_default_config ERROR                          [ 47%]
+tests/test_config.py::test_env_override ERROR                            [ 52%]
+tests/test_config.py::test_load_config_from_json ERROR                   [ 57%]
+tests/test_config.py::test_write_sample_config ERROR                     [ 61%]
+tests/test_metrics.py::TestStreamMetrics::test_hand_computed_three_token_trace ERROR [ 66%]
+tests/test_metrics.py::TestStreamMetrics::test_single_token_stream_edge_case ERROR [ 71%]
+tests/test_metrics.py::TestStreamMetrics::test_warmup_and_error_isolation_in_summary ERROR [ 76%]
+tests/test_sampling.py::test_greedy_is_deterministic ERROR               [ 80%]
+tests/test_sampling.py::test_top_k_filtering ERROR                       [ 85%]
+tests/test_sampling.py::test_temperature_scaling ERROR                   [ 90%]
+tests/test_summarize_benchmark.py::TestSummarizeBenchmark::test_fast_failing_errors_excluded_from_latency ERROR [ 95%]
+tests/test_summarize_benchmark.py::TestSummarizeBenchmark::test_synthetic_outlier_preserved_in_tail ERROR [100%]
+
+==================================== ERRORS ====================================
+_______________ ERROR at setup of test_requests_run_concurrently _______________
+
+    @pytest.fixture(scope="session", autouse=True)
+    def start_fake_stream_server():
+        process = subprocess.Popen(
+            [sys.executable, str(SERVER_SCRIPT)],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
+    
+        try:
+>           wait_for_port("127.0.0.1", 8765, timeout=10.0)
+
+tests/conftest.py:32: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+host = '127.0.0.1', port = 8765, timeout = 10.0
+
+    def wait_for_port(host: str, port: int, timeout: float = 10.0):
+        start = time.time()
+        while time.time() - start < timeout:
+            try:
+                with socket.create_connection((host, port), timeout=0.5):
+                    return True
+            except OSError:
+                time.sleep(0.1)
+>       raise RuntimeError(f"Server {host}:{port} did not start within {timeout}s")
+E       RuntimeError: Server 127.0.0.1:8765 did not start within 10.0s
+
+tests/conftest.py:20: RuntimeError
+
+During handling of the above exception, another exception occurred:
+
+fixturedef = <FixtureDef argname='start_fake_stream_server' scope='session' baseid='tests'>
+request = <SubRequest 'start_fake_stream_server' for <Function test_requests_run_concurrently>>
+
+    @pytest.hookimpl(wrapper=True)
+    def pytest_fixture_setup(fixturedef: FixtureDef, request) -> object | None:
+        if (
+            fixturedef.argname == "event_loop_policy"
+            and fixturedef.func.__module__ != __name__
+        ):
+            warnings.warn(
+                PytestDeprecationWarning(_EVENT_LOOP_POLICY_FIXTURE_DEPRECATION_WARNING),
+            )
+        asyncio_mode = _get_asyncio_mode(request.config)
+        if not _is_asyncio_fixture_function(fixturedef.func):
+            if asyncio_mode == Mode.STRICT:
+                # Ignore async fixtures without explicit asyncio mark in strict mode
+                # This applies to pytest_trio fixtures, for example
+                return (yield)
+            if not _is_coroutine_or_asyncgen(fixturedef.func):
+>               return (yield)
+                        ^^^^^
+
+.venv-linux/lib/python3.12/site-packages/pytest_asyncio/plugin.py:926: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    @pytest.fixture(scope="session", autouse=True)
+    def start_fake_stream_server():
+        process = subprocess.Popen(
+            [sys.executable, str(SERVER_SCRIPT)],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
+    
+        try:
+            wait_for_port("127.0.0.1", 8765, timeout=10.0)
+        except RuntimeError:
+            process.terminate()
+            stdout, stderr = process.communicate(timeout=5)
+>           raise RuntimeError(
+                f"fake_stream_server failed to start.\n"
+                f"STDOUT: {stdout.decode(errors='replace')}\n"
+                f"STDERR: {stderr.decode(errors='replace')}"
+            )
+E           RuntimeError: fake_stream_server failed to start.
+E           STDOUT: 
+E           STDERR: Traceback (most recent call last):
+E             File "/mnt/b/AI Inference Engineering/track1-client/tests/fake_stream_server.py", line 6, in <module>
+E               from fastapi import FastAPI, Request
+E           ModuleNotFoundError: No module named 'fastapi'
+
+tests/conftest.py:36: RuntimeError
+_____________ ERROR at setup of test_timeout_raises_timeout_error ______________
+
+    @pytest.fixture(scope="session", autouse=True)
+    def start_fake_stream_server():
+        process = subprocess.Popen(
+            [sys.executable, str(SERVER_SCRIPT)],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
+    
+        try:
+>           wait_for_port("127.0.0.1", 8765, timeout=10.0)
+
+tests/conftest.py:32: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+host = '127.0.0.1', port = 8765, timeout = 10.0
+
+    def wait_for_port(host: str, port: int, timeout: float = 10.0):
+        start = time.time()
+        while time.time() - start < timeout:
+            try:
+                with socket.create_connection((host, port), timeout=0.5):
+                    return True
+            except OSError:
+                time.sleep(0.1)
+>       raise RuntimeError(f"Server {host}:{port} did not start within {timeout}s")
+E       RuntimeError: Server 127.0.0.1:8765 did not start within 10.0s
+
+tests/conftest.py:20: RuntimeError
+
+During handling of the above exception, another exception occurred:
+
+    @pytest.fixture(scope="session", autouse=True)
+    def start_fake_stream_server():
+        process = subprocess.Popen(
+            [sys.executable, str(SERVER_SCRIPT)],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
+    
+        try:
+            wait_for_port("127.0.0.1", 8765, timeout=10.0)
+        except RuntimeError:
+            process.terminate()
+            stdout, stderr = process.communicate(timeout=5)
+>           raise RuntimeError(
+                f"fake_stream_server failed to start.\n"
+                f"STDOUT: {stdout.decode(errors='replace')}\n"
+                f"STDERR: {stderr.decode(errors='replace')}"
+            )
+E           RuntimeError: fake_stream_server failed to start.
+E           STDOUT: 
+E           STDERR: Traceback (most recent call last):
+E             File "/mnt/b/AI Inference Engineering/track1-client/tests/fake_stream_server.py", line 6, in <module>
+E               from fastapi import FastAPI, Request
+E           ModuleNotFoundError: No module named 'fastapi'
+
+tests/conftest.py:36: RuntimeError
+_______________ ERROR at setup of test_cancellation_runs_cleanup _______________
+
+    @pytest.fixture(scope="session", autouse=True)
+    def start_fake_stream_server():
+        process = subprocess.Popen(
+            [sys.executable, str(SERVER_SCRIPT)],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
+    
+        try:
+>           wait_for_port("127.0.0.1", 8765, timeout=10.0)
+
+tests/conftest.py:32: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+host = '127.0.0.1', port = 8765, timeout = 10.0
+
+    def wait_for_port(host: str, port: int, timeout: float = 10.0):
+        start = time.time()
+        while time.time() - start < timeout:
+            try:
+                with socket.create_connection((host, port), timeout=0.5):
+                    return True
+            except OSError:
+                time.sleep(0.1)
+>       raise RuntimeError(f"Server {host}:{port} did not start within {timeout}s")
+E       RuntimeError: Server 127.0.0.1:8765 did not start within 10.0s
+
+tests/conftest.py:20: RuntimeError
+
+During handling of the above exception, another exception occurred:
+
+    @pytest.fixture(scope="session", autouse=True)
+    def start_fake_stream_server():
+        process = subprocess.Popen(
+            [sys.executable, str(SERVER_SCRIPT)],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
+    
+        try:
+            wait_for_port("127.0.0.1", 8765, timeout=10.0)
+        except RuntimeError:
+            process.terminate()
+            stdout, stderr = process.communicate(timeout=5)
+>           raise RuntimeError(
+                f"fake_stream_server failed to start.\n"
+                f"STDOUT: {stdout.decode(errors='replace')}\n"
+                f"STDERR: {stderr.decode(errors='replace')}"
+            )
+E           RuntimeError: fake_stream_server failed to start.
+E           STDOUT: 
+E           STDERR: Traceback (most recent call last):
+E             File "/mnt/b/AI Inference Engineering/track1-client/tests/fake_stream_server.py", line 6, in <module>
+E               from fastapi import FastAPI, Request
+E           ModuleNotFoundError: No module named 'fastapi'
+
+tests/conftest.py:36: RuntimeError
+_____________ ERROR at setup of test_negative_duration_is_rejected _____________
+
+    @pytest.fixture(scope="session", autouse=True)
+    def start_fake_stream_server():
+        process = subprocess.Popen(
+            [sys.executable, str(SERVER_SCRIPT)],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
+    
+        try:
+>           wait_for_port("127.0.0.1", 8765, timeout=10.0)
+
+tests/conftest.py:32: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+host = '127.0.0.1', port = 8765, timeout = 10.0
+
+    def wait_for_port(host: str, port: int, timeout: float = 10.0):
+        start = time.time()
+        while time.time() - start < timeout:
+            try:
+                with socket.create_connection((host, port), timeout=0.5):
+                    return True
+            except OSError:
+                time.sleep(0.1)
+>       raise RuntimeError(f"Server {host}:{port} did not start within {timeout}s")
+E       RuntimeError: Server 127.0.0.1:8765 did not start within 10.0s
+
+tests/conftest.py:20: RuntimeError
+
+During handling of the above exception, another exception occurred:
+
+    @pytest.fixture(scope="session", autouse=True)
+    def start_fake_stream_server():
+        process = subprocess.Popen(
+            [sys.executable, str(SERVER_SCRIPT)],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
+    
+        try:
+            wait_for_port("127.0.0.1", 8765, timeout=10.0)
+        except RuntimeError:
+            process.terminate()
+            stdout, stderr = process.communicate(timeout=5)
+>           raise RuntimeError(
+                f"fake_stream_server failed to start.\n"
+                f"STDOUT: {stdout.decode(errors='replace')}\n"
+                f"STDERR: {stderr.decode(errors='replace')}"
+            )
+E           RuntimeError: fake_stream_server failed to start.
+E           STDOUT: 
+E           STDERR: Traceback (most recent call last):
+E             File "/mnt/b/AI Inference Engineering/track1-client/tests/fake_stream_server.py", line 6, in <module>
+E               from fastapi import FastAPI, Request
+E           ModuleNotFoundError: No module named 'fastapi'
+
+tests/conftest.py:36: RuntimeError
+______________________ ERROR at setup of test_causal_mask ______________________
+
+    @pytest.fixture(scope="session", autouse=True)
+    def start_fake_stream_server():
+        process = subprocess.Popen(
+            [sys.executable, str(SERVER_SCRIPT)],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
+    
+        try:
+>           wait_for_port("127.0.0.1", 8765, timeout=10.0)
+
+tests/conftest.py:32: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+host = '127.0.0.1', port = 8765, timeout = 10.0
+
+    def wait_for_port(host: str, port: int, timeout: float = 10.0):
+        start = time.time()
+        while time.time() - start < timeout:
+            try:
+                with socket.create_connection((host, port), timeout=0.5):
+                    return True
+            except OSError:
+                time.sleep(0.1)
+>       raise RuntimeError(f"Server {host}:{port} did not start within {timeout}s")
+E       RuntimeError: Server 127.0.0.1:8765 did not start within 10.0s
+
+tests/conftest.py:20: RuntimeError
+
+During handling of the above exception, another exception occurred:
+
+    @pytest.fixture(scope="session", autouse=True)
+    def start_fake_stream_server():
+        process = subprocess.Popen(
+            [sys.executable, str(SERVER_SCRIPT)],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
+    
+        try:
+            wait_for_port("127.0.0.1", 8765, timeout=10.0)
+        except RuntimeError:
+            process.terminate()
+            stdout, stderr = process.communicate(timeout=5)
+>           raise RuntimeError(
+                f"fake_stream_server failed to start.\n"
+                f"STDOUT: {stdout.decode(errors='replace')}\n"
+                f"STDERR: {stderr.decode(errors='replace')}"
+            )
+E           RuntimeError: fake_stream_server failed to start.
+E           STDOUT: 
+E           STDERR: Traceback (most recent call last):
+E             File "/mnt/b/AI Inference Engineering/track1-client/tests/fake_stream_server.py", line 6, in <module>
+E               from fastapi import FastAPI, Request
+E           ModuleNotFoundError: No module named 'fastapi'
+
+tests/conftest.py:36: RuntimeError
+_____________ ERROR at setup of test_stream_request_returns_chunks _____________
+
+    @pytest.fixture(scope="session", autouse=True)
+    def start_fake_stream_server():
+        process = subprocess.Popen(
+            [sys.executable, str(SERVER_SCRIPT)],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
+    
+        try:
+>           wait_for_port("127.0.0.1", 8765, timeout=10.0)
+
+tests/conftest.py:32: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+host = '127.0.0.1', port = 8765, timeout = 10.0
+
+    def wait_for_port(host: str, port: int, timeout: float = 10.0):
+        start = time.time()
+        while time.time() - start < timeout:
+            try:
+                with socket.create_connection((host, port), timeout=0.5):
+                    return True
+            except OSError:
+                time.sleep(0.1)
+>       raise RuntimeError(f"Server {host}:{port} did not start within {timeout}s")
+E       RuntimeError: Server 127.0.0.1:8765 did not start within 10.0s
+
+tests/conftest.py:20: RuntimeError
+
+During handling of the above exception, another exception occurred:
+
+self = <Coroutine test_stream_request_returns_chunks>
+
+    def setup(self) -> None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+        # When loop factories are configured, resolve the loop factory
+        # fixture early so that a factory variant change cascades cache
+        # invalidation before any async fixture checks its cache.
+        hook_caller = self.config.hook.pytest_asyncio_loop_factories
+        if hook_caller.get_hookimpls():
+            _ = self._request.getfixturevalue(_asyncio_loop_factory.__name__)
+>       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+.venv-linux/lib/python3.12/site-packages/pytest_asyncio/plugin.py:558: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    @pytest.fixture(scope="session", autouse=True)
+    def start_fake_stream_server():
+        process = subprocess.Popen(
+            [sys.executable, str(SERVER_SCRIPT)],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
+    
+        try:
+            wait_for_port("127.0.0.1", 8765, timeout=10.0)
+        except RuntimeError:
+            process.terminate()
+            stdout, stderr = process.communicate(timeout=5)
+>           raise RuntimeError(
+                f"fake_stream_server failed to start.\n"
+                f"STDOUT: {stdout.decode(errors='replace')}\n"
+                f"STDERR: {stderr.decode(errors='replace')}"
+            )
+E           RuntimeError: fake_stream_server failed to start.
+E           STDOUT: 
+E           STDERR: Traceback (most recent call last):
+E             File "/mnt/b/AI Inference Engineering/track1-client/tests/fake_stream_server.py", line 6, in <module>
+E               from fastapi import FastAPI, Request
+E           ModuleNotFoundError: No module named 'fastapi'
+
+tests/conftest.py:36: RuntimeError
+___________ ERROR at setup of test_stream_request_handles_http_error ___________
+
+    @pytest.fixture(scope="session", autouse=True)
+    def start_fake_stream_server():
+        process = subprocess.Popen(
+            [sys.executable, str(SERVER_SCRIPT)],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
+    
+        try:
+>           wait_for_port("127.0.0.1", 8765, timeout=10.0)
+
+tests/conftest.py:32: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+host = '127.0.0.1', port = 8765, timeout = 10.0
+
+    def wait_for_port(host: str, port: int, timeout: float = 10.0):
+        start = time.time()
+        while time.time() - start < timeout:
+            try:
+                with socket.create_connection((host, port), timeout=0.5):
+                    return True
+            except OSError:
+                time.sleep(0.1)
+>       raise RuntimeError(f"Server {host}:{port} did not start within {timeout}s")
+E       RuntimeError: Server 127.0.0.1:8765 did not start within 10.0s
+
+tests/conftest.py:20: RuntimeError
+
+During handling of the above exception, another exception occurred:
+
+self = <Coroutine test_stream_request_handles_http_error>
+
+    def setup(self) -> None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+        # When loop factories are configured, resolve the loop factory
+        # fixture early so that a factory variant change cascades cache
+        # invalidation before any async fixture checks its cache.
+        hook_caller = self.config.hook.pytest_asyncio_loop_factories
+        if hook_caller.get_hookimpls():
+            _ = self._request.getfixturevalue(_asyncio_loop_factory.__name__)
+>       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+.venv-linux/lib/python3.12/site-packages/pytest_asyncio/plugin.py:558: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    @pytest.fixture(scope="session", autouse=True)
+    def start_fake_stream_server():
+        process = subprocess.Popen(
+            [sys.executable, str(SERVER_SCRIPT)],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
+    
+        try:
+            wait_for_port("127.0.0.1", 8765, timeout=10.0)
+        except RuntimeError:
+            process.terminate()
+            stdout, stderr = process.communicate(timeout=5)
+>           raise RuntimeError(
+                f"fake_stream_server failed to start.\n"
+                f"STDOUT: {stdout.decode(errors='replace')}\n"
+                f"STDERR: {stderr.decode(errors='replace')}"
+            )
+E           RuntimeError: fake_stream_server failed to start.
+E           STDOUT: 
+E           STDERR: Traceback (most recent call last):
+E             File "/mnt/b/AI Inference Engineering/track1-client/tests/fake_stream_server.py", line 6, in <module>
+E               from fastapi import FastAPI, Request
+E           ModuleNotFoundError: No module named 'fastapi'
+
+tests/conftest.py:36: RuntimeError
+____________ ERROR at setup of test_stream_request_handles_timeout _____________
+
+    @pytest.fixture(scope="session", autouse=True)
+    def start_fake_stream_server():
+        process = subprocess.Popen(
+            [sys.executable, str(SERVER_SCRIPT)],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
+    
+        try:
+>           wait_for_port("127.0.0.1", 8765, timeout=10.0)
+
+tests/conftest.py:32: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+host = '127.0.0.1', port = 8765, timeout = 10.0
+
+    def wait_for_port(host: str, port: int, timeout: float = 10.0):
+        start = time.time()
+        while time.time() - start < timeout:
+            try:
+                with socket.create_connection((host, port), timeout=0.5):
+                    return True
+            except OSError:
+                time.sleep(0.1)
+>       raise RuntimeError(f"Server {host}:{port} did not start within {timeout}s")
+E       RuntimeError: Server 127.0.0.1:8765 did not start within 10.0s
+
+tests/conftest.py:20: RuntimeError
+
+During handling of the above exception, another exception occurred:
+
+self = <Coroutine test_stream_request_handles_timeout>
+
+    def setup(self) -> None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+        # When loop factories are configured, resolve the loop factory
+        # fixture early so that a factory variant change cascades cache
+        # invalidation before any async fixture checks its cache.
+        hook_caller = self.config.hook.pytest_asyncio_loop_factories
+        if hook_caller.get_hookimpls():
+            _ = self._request.getfixturevalue(_asyncio_loop_factory.__name__)
+>       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+.venv-linux/lib/python3.12/site-packages/pytest_asyncio/plugin.py:558: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    @pytest.fixture(scope="session", autouse=True)
+    def start_fake_stream_server():
+        process = subprocess.Popen(
+            [sys.executable, str(SERVER_SCRIPT)],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
+    
+        try:
+            wait_for_port("127.0.0.1", 8765, timeout=10.0)
+        except RuntimeError:
+            process.terminate()
+            stdout, stderr = process.communicate(timeout=5)
+>           raise RuntimeError(
+                f"fake_stream_server failed to start.\n"
+                f"STDOUT: {stdout.decode(errors='replace')}\n"
+                f"STDERR: {stderr.decode(errors='replace')}"
+            )
+E           RuntimeError: fake_stream_server failed to start.
+E           STDOUT: 
+E           STDERR: Traceback (most recent call last):
+E             File "/mnt/b/AI Inference Engineering/track1-client/tests/fake_stream_server.py", line 6, in <module>
+E               from fastapi import FastAPI, Request
+E           ModuleNotFoundError: No module named 'fastapi'
+
+tests/conftest.py:36: RuntimeError
+________ ERROR at setup of test_stream_request_propagates_cancellation _________
+
+    @pytest.fixture(scope="session", autouse=True)
+    def start_fake_stream_server():
+        process = subprocess.Popen(
+            [sys.executable, str(SERVER_SCRIPT)],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
+    
+        try:
+>           wait_for_port("127.0.0.1", 8765, timeout=10.0)
+
+tests/conftest.py:32: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+host = '127.0.0.1', port = 8765, timeout = 10.0
+
+    def wait_for_port(host: str, port: int, timeout: float = 10.0):
+        start = time.time()
+        while time.time() - start < timeout:
+            try:
+                with socket.create_connection((host, port), timeout=0.5):
+                    return True
+            except OSError:
+                time.sleep(0.1)
+>       raise RuntimeError(f"Server {host}:{port} did not start within {timeout}s")
+E       RuntimeError: Server 127.0.0.1:8765 did not start within 10.0s
+
+tests/conftest.py:20: RuntimeError
+
+During handling of the above exception, another exception occurred:
+
+self = <Coroutine test_stream_request_propagates_cancellation>
+
+    def setup(self) -> None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+        # When loop factories are configured, resolve the loop factory
+        # fixture early so that a factory variant change cascades cache
+        # invalidation before any async fixture checks its cache.
+        hook_caller = self.config.hook.pytest_asyncio_loop_factories
+        if hook_caller.get_hookimpls():
+            _ = self._request.getfixturevalue(_asyncio_loop_factory.__name__)
+>       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+.venv-linux/lib/python3.12/site-packages/pytest_asyncio/plugin.py:558: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    @pytest.fixture(scope="session", autouse=True)
+    def start_fake_stream_server():
+        process = subprocess.Popen(
+            [sys.executable, str(SERVER_SCRIPT)],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
+    
+        try:
+            wait_for_port("127.0.0.1", 8765, timeout=10.0)
+        except RuntimeError:
+            process.terminate()
+            stdout, stderr = process.communicate(timeout=5)
+>           raise RuntimeError(
+                f"fake_stream_server failed to start.\n"
+                f"STDOUT: {stdout.decode(errors='replace')}\n"
+                f"STDERR: {stderr.decode(errors='replace')}"
+            )
+E           RuntimeError: fake_stream_server failed to start.
+E           STDOUT: 
+E           STDERR: Traceback (most recent call last):
+E             File "/mnt/b/AI Inference Engineering/track1-client/tests/fake_stream_server.py", line 6, in <module>
+E               from fastapi import FastAPI, Request
+E           ModuleNotFoundError: No module named 'fastapi'
+
+tests/conftest.py:36: RuntimeError
+____________________ ERROR at setup of test_default_config _____________________
+
+    @pytest.fixture(scope="session", autouse=True)
+    def start_fake_stream_server():
+        process = subprocess.Popen(
+            [sys.executable, str(SERVER_SCRIPT)],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
+    
+        try:
+>           wait_for_port("127.0.0.1", 8765, timeout=10.0)
+
+tests/conftest.py:32: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+host = '127.0.0.1', port = 8765, timeout = 10.0
+
+    def wait_for_port(host: str, port: int, timeout: float = 10.0):
+        start = time.time()
+        while time.time() - start < timeout:
+            try:
+                with socket.create_connection((host, port), timeout=0.5):
+                    return True
+            except OSError:
+                time.sleep(0.1)
+>       raise RuntimeError(f"Server {host}:{port} did not start within {timeout}s")
+E       RuntimeError: Server 127.0.0.1:8765 did not start within 10.0s
+
+tests/conftest.py:20: RuntimeError
+
+During handling of the above exception, another exception occurred:
+
+    @pytest.fixture(scope="session", autouse=True)
+    def start_fake_stream_server():
+        process = subprocess.Popen(
+            [sys.executable, str(SERVER_SCRIPT)],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
+    
+        try:
+            wait_for_port("127.0.0.1", 8765, timeout=10.0)
+        except RuntimeError:
+            process.terminate()
+            stdout, stderr = process.communicate(timeout=5)
+>           raise RuntimeError(
+                f"fake_stream_server failed to start.\n"
+                f"STDOUT: {stdout.decode(errors='replace')}\n"
+                f"STDERR: {stderr.decode(errors='replace')}"
+            )
+E           RuntimeError: fake_stream_server failed to start.
+E           STDOUT: 
+E           STDERR: Traceback (most recent call last):
+E             File "/mnt/b/AI Inference Engineering/track1-client/tests/fake_stream_server.py", line 6, in <module>
+E               from fastapi import FastAPI, Request
+E           ModuleNotFoundError: No module named 'fastapi'
+
+tests/conftest.py:36: RuntimeError
+_____________________ ERROR at setup of test_env_override ______________________
+
+    @pytest.fixture(scope="session", autouse=True)
+    def start_fake_stream_server():
+        process = subprocess.Popen(
+            [sys.executable, str(SERVER_SCRIPT)],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
+    
+        try:
+>           wait_for_port("127.0.0.1", 8765, timeout=10.0)
+
+tests/conftest.py:32: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+host = '127.0.0.1', port = 8765, timeout = 10.0
+
+    def wait_for_port(host: str, port: int, timeout: float = 10.0):
+        start = time.time()
+        while time.time() - start < timeout:
+            try:
+                with socket.create_connection((host, port), timeout=0.5):
+                    return True
+            except OSError:
+                time.sleep(0.1)
+>       raise RuntimeError(f"Server {host}:{port} did not start within {timeout}s")
+E       RuntimeError: Server 127.0.0.1:8765 did not start within 10.0s
+
+tests/conftest.py:20: RuntimeError
+
+During handling of the above exception, another exception occurred:
+
+    @pytest.fixture(scope="session", autouse=True)
+    def start_fake_stream_server():
+        process = subprocess.Popen(
+            [sys.executable, str(SERVER_SCRIPT)],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
+    
+        try:
+            wait_for_port("127.0.0.1", 8765, timeout=10.0)
+        except RuntimeError:
+            process.terminate()
+            stdout, stderr = process.communicate(timeout=5)
+>           raise RuntimeError(
+                f"fake_stream_server failed to start.\n"
+                f"STDOUT: {stdout.decode(errors='replace')}\n"
+                f"STDERR: {stderr.decode(errors='replace')}"
+            )
+E           RuntimeError: fake_stream_server failed to start.
+E           STDOUT: 
+E           STDERR: Traceback (most recent call last):
+E             File "/mnt/b/AI Inference Engineering/track1-client/tests/fake_stream_server.py", line 6, in <module>
+E               from fastapi import FastAPI, Request
+E           ModuleNotFoundError: No module named 'fastapi'
+
+tests/conftest.py:36: RuntimeError
+_________________ ERROR at setup of test_load_config_from_json _________________
+
+    @pytest.fixture(scope="session", autouse=True)
+    def start_fake_stream_server():
+        process = subprocess.Popen(
+            [sys.executable, str(SERVER_SCRIPT)],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
+    
+        try:
+>           wait_for_port("127.0.0.1", 8765, timeout=10.0)
+
+tests/conftest.py:32: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+host = '127.0.0.1', port = 8765, timeout = 10.0
+
+    def wait_for_port(host: str, port: int, timeout: float = 10.0):
+        start = time.time()
+        while time.time() - start < timeout:
+            try:
+                with socket.create_connection((host, port), timeout=0.5):
+                    return True
+            except OSError:
+                time.sleep(0.1)
+>       raise RuntimeError(f"Server {host}:{port} did not start within {timeout}s")
+E       RuntimeError: Server 127.0.0.1:8765 did not start within 10.0s
+
+tests/conftest.py:20: RuntimeError
+
+During handling of the above exception, another exception occurred:
+
+    @pytest.fixture(scope="session", autouse=True)
+    def start_fake_stream_server():
+        process = subprocess.Popen(
+            [sys.executable, str(SERVER_SCRIPT)],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
+    
+        try:
+            wait_for_port("127.0.0.1", 8765, timeout=10.0)
+        except RuntimeError:
+            process.terminate()
+            stdout, stderr = process.communicate(timeout=5)
+>           raise RuntimeError(
+                f"fake_stream_server failed to start.\n"
+                f"STDOUT: {stdout.decode(errors='replace')}\n"
+                f"STDERR: {stderr.decode(errors='replace')}"
+            )
+E           RuntimeError: fake_stream_server failed to start.
+E           STDOUT: 
+E           STDERR: Traceback (most recent call last):
+E             File "/mnt/b/AI Inference Engineering/track1-client/tests/fake_stream_server.py", line 6, in <module>
+E               from fastapi import FastAPI, Request
+E           ModuleNotFoundError: No module named 'fastapi'
+
+tests/conftest.py:36: RuntimeError
+__________________ ERROR at setup of test_write_sample_config __________________
+
+    @pytest.fixture(scope="session", autouse=True)
+    def start_fake_stream_server():
+        process = subprocess.Popen(
+            [sys.executable, str(SERVER_SCRIPT)],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
+    
+        try:
+>           wait_for_port("127.0.0.1", 8765, timeout=10.0)
+
+tests/conftest.py:32: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+host = '127.0.0.1', port = 8765, timeout = 10.0
+
+    def wait_for_port(host: str, port: int, timeout: float = 10.0):
+        start = time.time()
+        while time.time() - start < timeout:
+            try:
+                with socket.create_connection((host, port), timeout=0.5):
+                    return True
+            except OSError:
+                time.sleep(0.1)
+>       raise RuntimeError(f"Server {host}:{port} did not start within {timeout}s")
+E       RuntimeError: Server 127.0.0.1:8765 did not start within 10.0s
+
+tests/conftest.py:20: RuntimeError
+
+During handling of the above exception, another exception occurred:
+
+    @pytest.fixture(scope="session", autouse=True)
+    def start_fake_stream_server():
+        process = subprocess.Popen(
+            [sys.executable, str(SERVER_SCRIPT)],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
+    
+        try:
+            wait_for_port("127.0.0.1", 8765, timeout=10.0)
+        except RuntimeError:
+            process.terminate()
+            stdout, stderr = process.communicate(timeout=5)
+>           raise RuntimeError(
+                f"fake_stream_server failed to start.\n"
+                f"STDOUT: {stdout.decode(errors='replace')}\n"
+                f"STDERR: {stderr.decode(errors='replace')}"
+            )
+E           RuntimeError: fake_stream_server failed to start.
+E           STDOUT: 
+E           STDERR: Traceback (most recent call last):
+E             File "/mnt/b/AI Inference Engineering/track1-client/tests/fake_stream_server.py", line 6, in <module>
+E               from fastapi import FastAPI, Request
+E           ModuleNotFoundError: No module named 'fastapi'
+
+tests/conftest.py:36: RuntimeError
+___ ERROR at setup of TestStreamMetrics.test_hand_computed_three_token_trace ___
+
+    @pytest.fixture(scope="session", autouse=True)
+    def start_fake_stream_server():
+        process = subprocess.Popen(
+            [sys.executable, str(SERVER_SCRIPT)],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
+    
+        try:
+>           wait_for_port("127.0.0.1", 8765, timeout=10.0)
+
+tests/conftest.py:32: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+host = '127.0.0.1', port = 8765, timeout = 10.0
+
+    def wait_for_port(host: str, port: int, timeout: float = 10.0):
+        start = time.time()
+        while time.time() - start < timeout:
+            try:
+                with socket.create_connection((host, port), timeout=0.5):
+                    return True
+            except OSError:
+                time.sleep(0.1)
+>       raise RuntimeError(f"Server {host}:{port} did not start within {timeout}s")
+E       RuntimeError: Server 127.0.0.1:8765 did not start within 10.0s
+
+tests/conftest.py:20: RuntimeError
+
+During handling of the above exception, another exception occurred:
+
+    @pytest.fixture(scope="session", autouse=True)
+    def start_fake_stream_server():
+        process = subprocess.Popen(
+            [sys.executable, str(SERVER_SCRIPT)],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
+    
+        try:
+            wait_for_port("127.0.0.1", 8765, timeout=10.0)
+        except RuntimeError:
+            process.terminate()
+            stdout, stderr = process.communicate(timeout=5)
+>           raise RuntimeError(
+                f"fake_stream_server failed to start.\n"
+                f"STDOUT: {stdout.decode(errors='replace')}\n"
+                f"STDERR: {stderr.decode(errors='replace')}"
+            )
+E           RuntimeError: fake_stream_server failed to start.
+E           STDOUT: 
+E           STDERR: Traceback (most recent call last):
+E             File "/mnt/b/AI Inference Engineering/track1-client/tests/fake_stream_server.py", line 6, in <module>
+E               from fastapi import FastAPI, Request
+E           ModuleNotFoundError: No module named 'fastapi'
+
+tests/conftest.py:36: RuntimeError
+____ ERROR at setup of TestStreamMetrics.test_single_token_stream_edge_case ____
+
+    @pytest.fixture(scope="session", autouse=True)
+    def start_fake_stream_server():
+        process = subprocess.Popen(
+            [sys.executable, str(SERVER_SCRIPT)],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
+    
+        try:
+>           wait_for_port("127.0.0.1", 8765, timeout=10.0)
+
+tests/conftest.py:32: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+host = '127.0.0.1', port = 8765, timeout = 10.0
+
+    def wait_for_port(host: str, port: int, timeout: float = 10.0):
+        start = time.time()
+        while time.time() - start < timeout:
+            try:
+                with socket.create_connection((host, port), timeout=0.5):
+                    return True
+            except OSError:
+                time.sleep(0.1)
+>       raise RuntimeError(f"Server {host}:{port} did not start within {timeout}s")
+E       RuntimeError: Server 127.0.0.1:8765 did not start within 10.0s
+
+tests/conftest.py:20: RuntimeError
+
+During handling of the above exception, another exception occurred:
+
+    @pytest.fixture(scope="session", autouse=True)
+    def start_fake_stream_server():
+        process = subprocess.Popen(
+            [sys.executable, str(SERVER_SCRIPT)],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
+    
+        try:
+            wait_for_port("127.0.0.1", 8765, timeout=10.0)
+        except RuntimeError:
+            process.terminate()
+            stdout, stderr = process.communicate(timeout=5)
+>           raise RuntimeError(
+                f"fake_stream_server failed to start.\n"
+                f"STDOUT: {stdout.decode(errors='replace')}\n"
+                f"STDERR: {stderr.decode(errors='replace')}"
+            )
+E           RuntimeError: fake_stream_server failed to start.
+E           STDOUT: 
+E           STDERR: Traceback (most recent call last):
+E             File "/mnt/b/AI Inference Engineering/track1-client/tests/fake_stream_server.py", line 6, in <module>
+E               from fastapi import FastAPI, Request
+E           ModuleNotFoundError: No module named 'fastapi'
+
+tests/conftest.py:36: RuntimeError
+_ ERROR at setup of TestStreamMetrics.test_warmup_and_error_isolation_in_summary _
+
+    @pytest.fixture(scope="session", autouse=True)
+    def start_fake_stream_server():
+        process = subprocess.Popen(
+            [sys.executable, str(SERVER_SCRIPT)],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
+    
+        try:
+>           wait_for_port("127.0.0.1", 8765, timeout=10.0)
+
+tests/conftest.py:32: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+host = '127.0.0.1', port = 8765, timeout = 10.0
+
+    def wait_for_port(host: str, port: int, timeout: float = 10.0):
+        start = time.time()
+        while time.time() - start < timeout:
+            try:
+                with socket.create_connection((host, port), timeout=0.5):
+                    return True
+            except OSError:
+                time.sleep(0.1)
+>       raise RuntimeError(f"Server {host}:{port} did not start within {timeout}s")
+E       RuntimeError: Server 127.0.0.1:8765 did not start within 10.0s
+
+tests/conftest.py:20: RuntimeError
+
+During handling of the above exception, another exception occurred:
+
+    @pytest.fixture(scope="session", autouse=True)
+    def start_fake_stream_server():
+        process = subprocess.Popen(
+            [sys.executable, str(SERVER_SCRIPT)],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
+    
+        try:
+            wait_for_port("127.0.0.1", 8765, timeout=10.0)
+        except RuntimeError:
+            process.terminate()
+            stdout, stderr = process.communicate(timeout=5)
+>           raise RuntimeError(
+                f"fake_stream_server failed to start.\n"
+                f"STDOUT: {stdout.decode(errors='replace')}\n"
+                f"STDERR: {stderr.decode(errors='replace')}"
+            )
+E           RuntimeError: fake_stream_server failed to start.
+E           STDOUT: 
+E           STDERR: Traceback (most recent call last):
+E             File "/mnt/b/AI Inference Engineering/track1-client/tests/fake_stream_server.py", line 6, in <module>
+E               from fastapi import FastAPI, Request
+E           ModuleNotFoundError: No module named 'fastapi'
+
+tests/conftest.py:36: RuntimeError
+________________ ERROR at setup of test_greedy_is_deterministic ________________
+
+    @pytest.fixture(scope="session", autouse=True)
+    def start_fake_stream_server():
+        process = subprocess.Popen(
+            [sys.executable, str(SERVER_SCRIPT)],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
+    
+        try:
+>           wait_for_port("127.0.0.1", 8765, timeout=10.0)
+
+tests/conftest.py:32: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+host = '127.0.0.1', port = 8765, timeout = 10.0
+
+    def wait_for_port(host: str, port: int, timeout: float = 10.0):
+        start = time.time()
+        while time.time() - start < timeout:
+            try:
+                with socket.create_connection((host, port), timeout=0.5):
+                    return True
+            except OSError:
+                time.sleep(0.1)
+>       raise RuntimeError(f"Server {host}:{port} did not start within {timeout}s")
+E       RuntimeError: Server 127.0.0.1:8765 did not start within 10.0s
+
+tests/conftest.py:20: RuntimeError
+
+During handling of the above exception, another exception occurred:
+
+    @pytest.fixture(scope="session", autouse=True)
+    def start_fake_stream_server():
+        process = subprocess.Popen(
+            [sys.executable, str(SERVER_SCRIPT)],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
+    
+        try:
+            wait_for_port("127.0.0.1", 8765, timeout=10.0)
+        except RuntimeError:
+            process.terminate()
+            stdout, stderr = process.communicate(timeout=5)
+>           raise RuntimeError(
+                f"fake_stream_server failed to start.\n"
+                f"STDOUT: {stdout.decode(errors='replace')}\n"
+                f"STDERR: {stderr.decode(errors='replace')}"
+            )
+E           RuntimeError: fake_stream_server failed to start.
+E           STDOUT: 
+E           STDERR: Traceback (most recent call last):
+E             File "/mnt/b/AI Inference Engineering/track1-client/tests/fake_stream_server.py", line 6, in <module>
+E               from fastapi import FastAPI, Request
+E           ModuleNotFoundError: No module named 'fastapi'
+
+tests/conftest.py:36: RuntimeError
+____________________ ERROR at setup of test_top_k_filtering ____________________
+
+    @pytest.fixture(scope="session", autouse=True)
+    def start_fake_stream_server():
+        process = subprocess.Popen(
+            [sys.executable, str(SERVER_SCRIPT)],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
+    
+        try:
+>           wait_for_port("127.0.0.1", 8765, timeout=10.0)
+
+tests/conftest.py:32: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+host = '127.0.0.1', port = 8765, timeout = 10.0
+
+    def wait_for_port(host: str, port: int, timeout: float = 10.0):
+        start = time.time()
+        while time.time() - start < timeout:
+            try:
+                with socket.create_connection((host, port), timeout=0.5):
+                    return True
+            except OSError:
+                time.sleep(0.1)
+>       raise RuntimeError(f"Server {host}:{port} did not start within {timeout}s")
+E       RuntimeError: Server 127.0.0.1:8765 did not start within 10.0s
+
+tests/conftest.py:20: RuntimeError
+
+During handling of the above exception, another exception occurred:
+
+    @pytest.fixture(scope="session", autouse=True)
+    def start_fake_stream_server():
+        process = subprocess.Popen(
+            [sys.executable, str(SERVER_SCRIPT)],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
+    
+        try:
+            wait_for_port("127.0.0.1", 8765, timeout=10.0)
+        except RuntimeError:
+            process.terminate()
+            stdout, stderr = process.communicate(timeout=5)
+>           raise RuntimeError(
+                f"fake_stream_server failed to start.\n"
+                f"STDOUT: {stdout.decode(errors='replace')}\n"
+                f"STDERR: {stderr.decode(errors='replace')}"
+            )
+E           RuntimeError: fake_stream_server failed to start.
+E           STDOUT: 
+E           STDERR: Traceback (most recent call last):
+E             File "/mnt/b/AI Inference Engineering/track1-client/tests/fake_stream_server.py", line 6, in <module>
+E               from fastapi import FastAPI, Request
+E           ModuleNotFoundError: No module named 'fastapi'
+
+tests/conftest.py:36: RuntimeError
+__________________ ERROR at setup of test_temperature_scaling __________________
+
+    @pytest.fixture(scope="session", autouse=True)
+    def start_fake_stream_server():
+        process = subprocess.Popen(
+            [sys.executable, str(SERVER_SCRIPT)],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
+    
+        try:
+>           wait_for_port("127.0.0.1", 8765, timeout=10.0)
+
+tests/conftest.py:32: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+host = '127.0.0.1', port = 8765, timeout = 10.0
+
+    def wait_for_port(host: str, port: int, timeout: float = 10.0):
+        start = time.time()
+        while time.time() - start < timeout:
+            try:
+                with socket.create_connection((host, port), timeout=0.5):
+                    return True
+            except OSError:
+                time.sleep(0.1)
+>       raise RuntimeError(f"Server {host}:{port} did not start within {timeout}s")
+E       RuntimeError: Server 127.0.0.1:8765 did not start within 10.0s
+
+tests/conftest.py:20: RuntimeError
+
+During handling of the above exception, another exception occurred:
+
+    @pytest.fixture(scope="session", autouse=True)
+    def start_fake_stream_server():
+        process = subprocess.Popen(
+            [sys.executable, str(SERVER_SCRIPT)],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
+    
+        try:
+            wait_for_port("127.0.0.1", 8765, timeout=10.0)
+        except RuntimeError:
+            process.terminate()
+            stdout, stderr = process.communicate(timeout=5)
+>           raise RuntimeError(
+                f"fake_stream_server failed to start.\n"
+                f"STDOUT: {stdout.decode(errors='replace')}\n"
+                f"STDERR: {stderr.decode(errors='replace')}"
+            )
+E           RuntimeError: fake_stream_server failed to start.
+E           STDOUT: 
+E           STDERR: Traceback (most recent call last):
+E             File "/mnt/b/AI Inference Engineering/track1-client/tests/fake_stream_server.py", line 6, in <module>
+E               from fastapi import FastAPI, Request
+E           ModuleNotFoundError: No module named 'fastapi'
+
+tests/conftest.py:36: RuntimeError
+_ ERROR at setup of TestSummarizeBenchmark.test_fast_failing_errors_excluded_from_latency _
+
+    @pytest.fixture(scope="session", autouse=True)
+    def start_fake_stream_server():
+        process = subprocess.Popen(
+            [sys.executable, str(SERVER_SCRIPT)],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
+    
+        try:
+>           wait_for_port("127.0.0.1", 8765, timeout=10.0)
+
+tests/conftest.py:32: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+host = '127.0.0.1', port = 8765, timeout = 10.0
+
+    def wait_for_port(host: str, port: int, timeout: float = 10.0):
+        start = time.time()
+        while time.time() - start < timeout:
+            try:
+                with socket.create_connection((host, port), timeout=0.5):
+                    return True
+            except OSError:
+                time.sleep(0.1)
+>       raise RuntimeError(f"Server {host}:{port} did not start within {timeout}s")
+E       RuntimeError: Server 127.0.0.1:8765 did not start within 10.0s
+
+tests/conftest.py:20: RuntimeError
+
+During handling of the above exception, another exception occurred:
+
+    @pytest.fixture(scope="session", autouse=True)
+    def start_fake_stream_server():
+        process = subprocess.Popen(
+            [sys.executable, str(SERVER_SCRIPT)],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
+    
+        try:
+            wait_for_port("127.0.0.1", 8765, timeout=10.0)
+        except RuntimeError:
+            process.terminate()
+            stdout, stderr = process.communicate(timeout=5)
+>           raise RuntimeError(
+                f"fake_stream_server failed to start.\n"
+                f"STDOUT: {stdout.decode(errors='replace')}\n"
+                f"STDERR: {stderr.decode(errors='replace')}"
+            )
+E           RuntimeError: fake_stream_server failed to start.
+E           STDOUT: 
+E           STDERR: Traceback (most recent call last):
+E             File "/mnt/b/AI Inference Engineering/track1-client/tests/fake_stream_server.py", line 6, in <module>
+E               from fastapi import FastAPI, Request
+E           ModuleNotFoundError: No module named 'fastapi'
+
+tests/conftest.py:36: RuntimeError
+_ ERROR at setup of TestSummarizeBenchmark.test_synthetic_outlier_preserved_in_tail _
+
+    @pytest.fixture(scope="session", autouse=True)
+    def start_fake_stream_server():
+        process = subprocess.Popen(
+            [sys.executable, str(SERVER_SCRIPT)],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
+    
+        try:
+>           wait_for_port("127.0.0.1", 8765, timeout=10.0)
+
+tests/conftest.py:32: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+host = '127.0.0.1', port = 8765, timeout = 10.0
+
+    def wait_for_port(host: str, port: int, timeout: float = 10.0):
+        start = time.time()
+        while time.time() - start < timeout:
+            try:
+                with socket.create_connection((host, port), timeout=0.5):
+                    return True
+            except OSError:
+                time.sleep(0.1)
+>       raise RuntimeError(f"Server {host}:{port} did not start within {timeout}s")
+E       RuntimeError: Server 127.0.0.1:8765 did not start within 10.0s
+
+tests/conftest.py:20: RuntimeError
+
+During handling of the above exception, another exception occurred:
+
+    @pytest.fixture(scope="session", autouse=True)
+    def start_fake_stream_server():
+        process = subprocess.Popen(
+            [sys.executable, str(SERVER_SCRIPT)],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
+    
+        try:
+            wait_for_port("127.0.0.1", 8765, timeout=10.0)
+        except RuntimeError:
+            process.terminate()
+            stdout, stderr = process.communicate(timeout=5)
+>           raise RuntimeError(
+                f"fake_stream_server failed to start.\n"
+                f"STDOUT: {stdout.decode(errors='replace')}\n"
+                f"STDERR: {stderr.decode(errors='replace')}"
+            )
+E           RuntimeError: fake_stream_server failed to start.
+E           STDOUT: 
+E           STDERR: Traceback (most recent call last):
+E             File "/mnt/b/AI Inference Engineering/track1-client/tests/fake_stream_server.py", line 6, in <module>
+E               from fastapi import FastAPI, Request
+E           ModuleNotFoundError: No module named 'fastapi'
+
+tests/conftest.py:36: RuntimeError
+=========================== short test summary info ============================
+ERROR tests/test_async_demo.py::test_requests_run_concurrently - RuntimeError...
+ERROR tests/test_async_demo.py::test_timeout_raises_timeout_error - RuntimeEr...
+ERROR tests/test_async_demo.py::test_cancellation_runs_cleanup - RuntimeError...
+ERROR tests/test_async_demo.py::test_negative_duration_is_rejected - RuntimeE...
+ERROR tests/test_causal_attention.py::test_causal_mask - RuntimeError: fake_s...
+ERROR tests/test_client.py::test_stream_request_returns_chunks - RuntimeError...
+ERROR tests/test_client.py::test_stream_request_handles_http_error - RuntimeE...
+ERROR tests/test_client.py::test_stream_request_handles_timeout - RuntimeErro...
+ERROR tests/test_client.py::test_stream_request_propagates_cancellation - Run...
+ERROR tests/test_config.py::test_default_config - RuntimeError: fake_stream_s...
+ERROR tests/test_config.py::test_env_override - RuntimeError: fake_stream_ser...
+ERROR tests/test_config.py::test_load_config_from_json - RuntimeError: fake_s...
+ERROR tests/test_config.py::test_write_sample_config - RuntimeError: fake_str...
+ERROR tests/test_metrics.py::TestStreamMetrics::test_hand_computed_three_token_trace
+ERROR tests/test_metrics.py::TestStreamMetrics::test_single_token_stream_edge_case
+ERROR tests/test_metrics.py::TestStreamMetrics::test_warmup_and_error_isolation_in_summary
+ERROR tests/test_sampling.py::test_greedy_is_deterministic - RuntimeError: fa...
+ERROR tests/test_sampling.py::test_top_k_filtering - RuntimeError: fake_strea...
+ERROR tests/test_sampling.py::test_temperature_scaling - RuntimeError: fake_s...
+ERROR tests/test_summarize_benchmark.py::TestSummarizeBenchmark::test_fast_failing_errors_excluded_from_latency
+ERROR tests/test_summarize_benchmark.py::TestSummarizeBenchmark::test_synthetic_outlier_preserved_in_tail
+======================== 21 errors in 77.72s (0:01:17) =========================
