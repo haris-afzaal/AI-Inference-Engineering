@@ -1,0 +1,61 @@
+{
+  "gate": "Week 07 Gate (Days 43-49)",
+  "misleading_chart_audit": {
+    "title": "GPU Kernel Optimization Makes Inference 86% Faster Everywhere!",
+    "x_axis": "Optimization",
+    "y_axis": "Speed (no units, truncated axis 55ms-70ms)",
+    "flaws": [
+      "False attribution: Labels host sync/launch reduction as 'GPU Kernel Optimization' when GPU kernels were only 13.64% of runtime.",
+      "Missing units & truncated Y-axis: Exaggerates visual bar difference by starting Y-axis above zero.",
+      "Over-generalization ('Everywhere!'): Hides Day 48 seq_len=512 CPU regression (+220.42% slower)."
+    ]
+  },
+  "bounded_assumption_break": {
+    "assumption": "Hardcoded Y-axis ceiling of 200 ms is sufficient for all latency comparisons",
+    "failure_symptom": "Clipped bars exceeding 200 ms: ['CPU FP32 Baseline (seq=512)', 'CPU FP16 Candidate (seq=512)']",
+    "fix": "Dynamic zero-based Y-axis scaling (0 to 2000 ms) with explicit p50 ms labels"
+  },
+  "evidence": {
+    "hardware_telemetry": {
+      "gpu_target": "NVIDIA Tesla T4 (15360 MiB VRAM, FP16 Tensor Core 65 TFLOPS, 320 GB/s HBM)",
+      "local_cpu_target": "WSL2 Ubuntu x86 CPU (No FP16 Tensor Cores; FP16->FP32 fallback on long prefill)"
+    },
+    "memory_accounting": {
+      "model_params": "50.38M (4-layer Decoder, d_model=1024)",
+      "fp32_weights_mb": 192.2,
+      "fp16_weights_mb": 96.1,
+      "memory_reduction_pct": -50.0
+    },
+    "timeline_breakdown_t4_ms": {
+      "total_request_nvtx_ms": 68.718,
+      "gpu_kernel_compute_ms": 9.37,
+      "cpu_launch_and_python_dispatch_ms": 55.148,
+      "h2d_d2h_memcpy_ms": 2.799,
+      "sync_barrier_overhead_ms": 1.401,
+      "gpu_active_pct": 13.64
+    },
+    "tuning_experiments": {
+      "day47_t4_dtype_fp16": {
+        "delta_latency_pct": -40.0,
+        "delta_mem_pct": -50.0,
+        "verdict": "IMPROVE"
+      },
+      "day48_cpu_seq128_fp16": {
+        "delta_latency_pct": -11.57,
+        "delta_mem_pct": -50.0,
+        "verdict": "IMPROVE"
+      },
+      "day48_cpu_seq512_fp16": {
+        "delta_latency_pct": 220.42,
+        "delta_mem_pct": -50.0,
+        "verdict": "REGRESS (DOES NOT GENERALIZE)"
+      }
+    },
+    "what_was_not_measured": [
+      "Python interpreter vs PyTorch dispatcher breakdown inside the 55.15 ms host gap (requires torch.profiler / cProfile)",
+      "CUDA Graph capture/replay latency reduction on Tesla T4 decode loop",
+      "Multi-user concurrent batching (concurrency > 1) KV cache fragmentation under continuous batching",
+      "Real LLM weights (e.g., Llama-3-8B) end-to-end TTFT/ITL under INT4/FP8 quantization"
+    ]
+  }
+}

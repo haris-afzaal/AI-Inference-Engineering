@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="860" height="420" font-family="Arial, sans-serif">
+  <rect width="100%" height="100%" fill="#ffffff"/>
+  <text x="430" y="32" text-anchor="middle" font-size="16" font-weight="bold" fill="#111">Corrected: End-to-End Request Latency (p50 ms, Lower is Better) by Hardware &amp; Prompt Length</text>
+  <text x="430" y="54" text-anchor="middle" font-size="12" fill="#555">Zero-based Y-axis (0–2000 ms) | 4-Layer Decoder (d_model=1024, 12 decode steps, n=5 reps)</text>
+  <line x1="90" y1="330" x2="810" y2="330" stroke="#333" stroke-width="2"/>
+  <line x1="90" y1="70" x2="90" y2="330" stroke="#333" stroke-width="2"/>
+  <text x="25" y="200" transform="rotate(-90 25,200)" text-anchor="middle" font-size="13" font-weight="bold" fill="#222">p50 Latency (ms)</text>
+  <line x1="85" y1="330" x2="810" y2="330" stroke="#e0e0e0" stroke-dasharray="4"/>
+  <text x="80" y="334" text-anchor="end" font-size="11" fill="#444">0 ms</text>
+  <line x1="85" y1="265" x2="810" y2="265" stroke="#e0e0e0" stroke-dasharray="4"/>
+  <text x="80" y="269" text-anchor="end" font-size="11" fill="#444">500 ms</text>
+  <line x1="85" y1="200" x2="810" y2="200" stroke="#e0e0e0" stroke-dasharray="4"/>
+  <text x="80" y="204" text-anchor="end" font-size="11" fill="#444">1000 ms</text>
+  <line x1="85" y1="135" x2="810" y2="135" stroke="#e0e0e0" stroke-dasharray="4"/>
+  <text x="80" y="139" text-anchor="end" font-size="11" fill="#444">1500 ms</text>
+  <line x1="85" y1="70" x2="810" y2="70" stroke="#e0e0e0" stroke-dasharray="4"/>
+  <text x="80" y="74" text-anchor="end" font-size="11" fill="#444">2000 ms</text>
+  <rect x="130" y="317" width="95" height="13" fill="#4A90E2" rx="4"/>
+  <text x="177" y="309" text-anchor="middle" font-size="12" font-weight="bold" fill="#111">100.0 ms</text>
+  <text x="177" y="352" text-anchor="middle" font-size="11" fill="#222">T4 FP32 Baseline</text>
+  <text x="177" y="368" text-anchor="middle" font-size="11" fill="#555">(seq=128)</text>
+  <rect x="300" y="323" width="95" height="7" fill="#2ECC71" rx="4"/>
+  <text x="347" y="315" text-anchor="middle" font-size="12" font-weight="bold" fill="#111">60.0 ms</text>
+  <text x="347" y="352" text-anchor="middle" font-size="11" fill="#222">T4 FP16 Candidate</text>
+  <text x="347" y="368" text-anchor="middle" font-size="11" fill="#555">(seq=128)</text>
+  <rect x="470" y="251" width="95" height="79" fill="#4A90E2" rx="4"/>
+  <text x="517" y="243" text-anchor="middle" font-size="12" font-weight="bold" fill="#111">609.7 ms</text>
+  <text x="517" y="352" text-anchor="middle" font-size="11" fill="#222">CPU FP32 Baseline</text>
+  <text x="517" y="368" text-anchor="middle" font-size="11" fill="#555">(seq=512)</text>
+  <rect x="640" y="77" width="95" height="253" fill="#E74C3C" rx="4"/>
+  <text x="687" y="69" text-anchor="middle" font-size="12" font-weight="bold" fill="#111">1953.5 ms</text>
+  <text x="687" y="352" text-anchor="middle" font-size="11" fill="#222">CPU FP16 Candidate</text>
+  <text x="687" y="368" text-anchor="middle" font-size="11" fill="#555">(seq=512)</text>
+  <text x="430" y="402" text-anchor="middle" font-size="11" fill="#333">Note: FP16 improves latency on T4 Tensor Cores (-40%), but regresses on x86 CPU at seq_len=512 (+220.4%).</text>
+</svg>
